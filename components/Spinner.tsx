@@ -17,13 +17,15 @@ const Spinner = () => {
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],
-    outputRange: ['0deg', '1080deg'],
+    outputRange: ['0deg', '360deg'],
   });
 
   return (
-    <Animated.View style={{ transform: [{ rotate: spin }] }}>
-      <FontAwesome name="spinner" size={32} color="#6200ee" />
-    </Animated.View>
+    <View style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', zIndex: 999, backgroundColor: 'rgba(0, 0, 0, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Animated.View style={{ transform: [{ rotate: spin }]}}>
+        <FontAwesome name="spinner" size={32} color="#6200ee" />
+      </Animated.View>
+    </View>
   );
 };
 
