@@ -275,6 +275,7 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from 'react-native';
 import axios from 'axios';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -284,6 +285,17 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 
 
 const HomeScreen = () => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = async () => {
+  try {
+    setRefreshing(true);
+    await refetch(); // Triggers the query again
+  } finally {
+    setRefreshing(false);
+  }
+};
+
   // ✅ Step 1: Type for the post
 type PlaceholderItem = {
   id: number;
@@ -358,7 +370,7 @@ const fetchPlaceholders = async ({
 
       {isLoading ? (
         <View style={styles.spinner}>
-          <Spinner />
+          <ActivityIndicator size={'large'} />
         </View>
       ) : (
         <FlatList
@@ -371,8 +383,10 @@ const fetchPlaceholders = async ({
             }
           }}
           onEndReachedThreshold={0}
-          ListHeaderComponent={isFetchingNextPage ? <Spinner /> : null}
-        />
+          ListFooterComponent={isFetchingNextPage ? <ActivityIndicator size={'large'} /> : null}
+          refreshing={refreshing} // This enables the pull-down spinner
+          onRefresh={onRefresh}   // This handles the pull-down gesture
+          />
       )}
 
       <View style={styles.bottomStatus}>
